@@ -1,0 +1,87 @@
+name: build-release
+
+on:
+  push:
+    tags:
+      'v*'
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    strategy:
+      matrix:
+        app: [poecampain]
+        os: [linux, darwin, windows]
+        go-version: [1.25]
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v6
+
+    - name: Setup Go
+      uses: actions/setup-go@v5
+      with:
+        go-version: ${{ matrix.go-version }}
+
+    - name: Build linux
+      if: matrix.os == 'linux'
+      run: |
+        go mod download
+        GOOS=$os GOARCH=amd64 go build -ldflags="-s -w" -trimpath -o $app ./...
+        tar -czf $app-$os-amd64.tar.gz $app data/
+        rm $app
+      env:
+          app: ${{ matrix.app }}
+          os: ${{ matrix.os }}
+
+    - name: Build macOS
+      if: matrix.os == 'darwin'
+      run: |
+        go mod download
+        GOOS=$os GOARCH=amd64 go build -ldflags="-s -w" -trimpath -o $app ./...
+        tar -czf $app-$os-amd64.tar.gz $app data/
+        GOOS=$os GOARCH=arm64 go build -ldflags="-s -w" -trimpath -o $app ./...
+        tar -czf $app-$os-arm64.tar.gz $app data/
+        rm $app
+      env:
+          app: ${{ matrix.app }}
+          os: ${{ matrix.os }}
+
+    - name: Build windows
+      if: matrix.os == 'windows'
+      run: |
+        go mod download
+        GOOS=$os GOARCH=amd64 go build -ldflags="-s -w" -trimpath -o $app.exe ./...
+        zip -r $app-$os-amd64.zip $app.exe data/
+        rm $app.exe
+      env:
+          app: ${{ matrix.app }}
+          os: ${{ matrix.os }}
+
+    - name: Upload Release Assets linux
+      uses: softprops/action-gh-release@v2
+      if: github.ref_type == 'tag' && matrix.os == 'linux'
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        files: ${{ matrix.app }}-${{ matrix.os }}-amd64.tar.gz
+
+    - name: Upload Release Assets darwin
+      uses: softprops/action-gh-release@v2
+      if: github.ref_type == 'tag' && matrix.os == 'darwin'
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        files: |
+          ${{ matrix.app }}-${{ matrix.os }}-amd64.tar.gz
+          ${{ matrix.app }}-${{ matrix.os }}-arm64.tar.gz
+
+    - name: Upload Release Assets windows
+      uses: softprops/action-gh-release@v2
+      if: github.ref_type == 'tag' && matrix.os == 'windows'
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        files: ${{ matrix.app }}-${{ matrix.os }}-amd64.zip
