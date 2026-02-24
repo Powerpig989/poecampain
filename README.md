@@ -11,7 +11,6 @@ Terminal based campaign guide for Path of Exile.
 * Remember progress when exiting.
 
 ### Notes
-* You will need [Go](https://go.dev/) to build the app.
 * A [Nerd Font](https://www.nerdfonts.com) is required to render all text.
 * This guide was made for my own use. There may be important information, directions, or optional content not included. Feel free to modify the guide for your own purpose.
 * Mainly tested on Linux, but should work on all platforms.
