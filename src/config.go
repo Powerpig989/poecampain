@@ -4,15 +4,28 @@ import (
 	"fmt"
 	"os"
 	"path"
+	"runtime"
 	"strings"
 
 	"go.yaml.in/yaml/v4"
 )
 
 var (
-	defaultClientPath = expandTilde(`~/.steam/steam/steamapps/common/Path of Exile/logs/Client.txt`)
-	configPath        = expandTilde(path.Join("~", ".config", "poecampain", "config.yaml"))
+	configPath = expandTilde(path.Join("~", ".config", "poecampain", "config.yaml"))
 )
+
+func defaultClientPath() string {
+	switch runtime.GOOS {
+	case "windows":
+		return `C:\Program Files (x86)\Steam\steamapps\common\Path of Exile\logs\Client.txt`
+	case "linux":
+		return expandTilde(`~/.steam/steam/steamapps/common/Path of Exile/logs/Client.txt`)
+	case "darwin":
+		return expandTilde(`~/Library/Application Support/Steam/steamapps/common/Path of Exile/logs/Client.txt`)
+	default:
+		return ""
+	}
+}
 
 type Config struct {
 	// PoE Client.txt
@@ -21,7 +34,7 @@ type Config struct {
 
 func NewConfig() *Config {
 	return &Config{
-		Client: defaultClientPath,
+		Client: defaultClientPath(),
 	}
 }
 
