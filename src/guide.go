@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"os"
+	"path"
 	"path/filepath"
 	"regexp"
 	"strconv"
@@ -11,9 +12,7 @@ import (
 	"go.yaml.in/yaml/v4"
 )
 
-const (
-	statePath = "~/.cache/poecampain"
-)
+var statePath = expandTilde(path.Join("~", ".cache", "poecampain"))
 
 type Step struct {
 	Text     string
