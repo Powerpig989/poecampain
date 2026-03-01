@@ -20,7 +20,10 @@ Terminal based campaign guide for Path of Exile.
 ### ~/.config/poecampain/config.yaml
 `client: /path/to/Path of Exile/logs/Client.txt`
 
-Default: `~/.steam/steam/steamapps/common/Path of Exile/logs/Client.txt`
+#### Default Path
+* Linux: `~/.steam/steam/steamapps/common/Path of Exile/logs/Client.txt`
+* Windows: `C:\Program Files (x86)\Steam\steamapps\common\Path of Exile\logs\Client.txt`
+* Mac: `~/Library/Application Support/Steam/steamapps/common/Path of Exile/logs/Client.txt`
 
 The Client.txt file is used to read the current zone information.
 
