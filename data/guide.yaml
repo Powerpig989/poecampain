@@ -618,7 +618,7 @@
 - |
   text(Follow_the_left_wall)
   setportal(3-way_split)
-  text(Take_the__fork)
+  text(Take_the__fork_from_your_characters_perspective)
   zone(2_8_11)
 - |
   text(Go_)
@@ -628,13 +628,14 @@
   waypoint(2_8_town)
 - |
   portal(2_8_14)
-  text(Take_the__fork)
+  text(Take_the_other_fork)
   zone(2_8_5)
 - |
-  setportal(near_the_trial)
+  setportal(entrance)
   text(Go_)
   zone(2_8_6)
 - |
+  text(Go_󰁜)
   waypoint(2_8_town)
 - |
   portal(2_8_5)
